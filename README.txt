@@ -13,9 +13,16 @@ Client and Server environment:
 
 Testing details
    - Mixed workload throughput test
-   - The read to write ratio will vary from 0% to 100%
-   - Test will be done with varying number of servers: 3, 7, and 13
-   - Requests per second will be the benchmark
+      - The read to write ratio will vary from 0% to 100%
+      - Test will be done with varying number of servers: 3, 7, and 13
+      - Requests per second will be the benchmark
    - Throughput upon failures
      - Test will be done with varying number of servers: 5, 7, and 13
      - The write to read ratios to be tested are: 5%, 20%, 50%
+       - In a real life environment, the read traffic is much higher compared to the write traffic.
+          As for realistic and conservative ratios, 5%, 20%, 50% will be used.
+     - Test cases are:
+       - Failure of leader node and recovery
+       - Failure of a single follower node and recovery
+       - Series of failure of follower nodes up to the maximum number allowed
+         for operation in a short period of time
