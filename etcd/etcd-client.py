@@ -1,34 +1,21 @@
 import etcd
-import socket
 import sys
 
 maxidx = 100
-leaderIp = '172.31.40.147'
+leaderIp = '172.31.40.149'
 
-writeratio = client.read('/writeratio') * 10
-readratio = 1000-writeratio
-ip = socket.gethostbyname(socket.gethostname())
-clientId = (ip.split('.'))[-1]
+client = etcd.Client(host=leaderIp, port=4001, protocol='http') # on port 4001
+writeratio = int(client.read('/writeratio').value)
 
-idx = 1
-client = etcd.Client(host=leaderIp, protocol='https') # on port 4001
+readratio = 100-writeratio
+op_repeat = 10
+
 while True:
-    for x in range(writeratio):
-        client.write('/nodes/n' + clientId + '_' + str(x), str(x))
-    for x in range(readratio):
-        client.read('/nodes/n' + clientId + '_' + str(widx))
-
-# while True:
-#     for x in range(idx*writeratio):
-#         client.write('/nodes/n' + clientId + '_' + str(x), str(x))
-#     max_written_idx = idx*writeratio
-#     widx = 0
-#     for x in range(idx*readratio):
-#         client.read('/nodes/n' + clientId + '_' + str(widx))
-#         widx = widx + 1
-#         if widx == max_written_idx:
-#             widx = 0
-#     idx = idx + 1
-#     if idx > maxidx:
-#         idx = 1
-
+    for x in range(writeratio*op_repeat):
+        nodeId = x % maxidx
+        print "Writing [{0}] to /n{1}".format(str(x),str(nodeId))
+        client.write('/n' + str(nodeId), str(x))
+    for x in range(readratio*op_repeat):
+        print "Reading /n" + str(nodeId)
+        nodeId = x % maxidx
+        client.read('/n' + str(nodeId))
