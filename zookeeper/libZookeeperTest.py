@@ -1,14 +1,9 @@
 from optparse import OptionParser
 import zkclient
-from zkclient import zookeeper
+from zkclient import ZKClient, SequentialCountingWatcher, zookeeper
+from libTest import childPath, rootpath, getMaxIdx
 
 import os
-import socket
-
-rootpath = '/nodes'
-
-ip = socket.gethostbyname(socket.gethostname())
-clientId = (ip.split('.'))[-1]
 
 def init():
   servers_file = 'servers.txt'
@@ -29,28 +24,46 @@ def init():
 
   zkclient.options = options
 
-  zookeeper.set_log_stream(open("log/cli_log_%d.txt" % (os.getpid()),"w"))
+  zookeeper.set_log_stream(open("log-cli/cli_log_%d.txt" % (os.getpid()),"w"))
   servers = readServers(servers_file)
   return (servers, options)
 
-
-def childPath(i):
-    return rootpath + '/n' + clientId + '_' + str(i)
 
 def readServers(fname):
     lines = [line.strip() for line in open(fname)]
     return map(lambda x : x.split(' ')[0], lines)
 
 
-def createNodes(client, maxidx):
+def createNodes(client):
+  maxidx = getMaxIdx()
   if not client.exists(rootpath):
     client.create(rootpath)
   for i in range(maxidx):
     if not client.exists(childPath(i)):
       client.create(childPath(i))
 
-def deleteNodes(client, maxidx):
+def deleteNodes(client):
+  maxidx = getMaxIdx()
   for i in range(maxidx):
     client.delete(childPath(i))
   client.delete(rootpath)
 
+
+class ZookeeperClient(object):
+  def __init__(self, servers, timeout):
+    self.wrapped = ZKClient(servers, timeout)
+
+  def create(self, path):
+    return self.wrapped.create(path)
+
+  def delete(self, path):
+    return self.wrapped.delete(path)
+
+  def read(self, path):
+    return self.wrapped.get(path)
+
+  def write(self, path, data):
+    return self.wrapped.set(path, data)
+
+  def exists(self, path):
+    return self.wrapped.exists(path)
