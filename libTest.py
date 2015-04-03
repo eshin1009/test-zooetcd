@@ -21,8 +21,8 @@ def initTest(rw, wratio, clusterNum):
   mode = rw
   doesWrite = rw == 'write'
   pid = os.getpid()
-  outTS = open('log/log-ts-{0}-{1}-{2}-{3}.txt'.format(wratio, rw, pid, clusterNum), 'w')
-  outDUR = open('log/log-dur-{0}-{1}-{2}-{3}.txt'.format(wratio, rw, pid, clusterNum), 'w')
+  outTS = open('log/log-ts-{0}-{1}-{2}-{3}.txt'.format(wratio, clusterNum, rw, pid), 'w')
+  outDUR = open('log/log-dur-{0}-{1}-{2}-{3}.txt'.format(wratio, clusterNum, rw, pid), 'w')
   writeratio = wratio
   readratio = 100-wratio
   maxidx = wratio * op_repeat
@@ -37,7 +37,7 @@ def doLoop(client):
   while True:
     for nodeId in range(maxidx):
       path = childPath(nodeId)
-      print "{0} {1}".format(mode, path)
+      #print "{0} {1}".format(mode, path)
       startTime = datetime.datetime.now()
       if doesWrite:
         client.write(path, str(nodeId))
