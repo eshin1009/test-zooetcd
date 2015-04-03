@@ -1,11 +1,11 @@
 import os
 import datetime
 import socket
+import time
 
 op_repeat = 10
 maxidx = 0
 
-pid = os.getpid()
 
 outTS = ""
 outTS = ""
@@ -16,12 +16,13 @@ rootpath = '/nodes'
 mode = ""
 doesWrite = False
 
-def initTest(rw, wratio):
+def initTest(rw, wratio, clusterNum):
   global mode, doesWrite, outTS, outDUR, writeratio, readratio, maxidx
   mode = rw
   doesWrite = rw == 'write'
-  outTS = open('log/log-ts-{0}-{1}-{2}.txt'.format(wratio, rw, pid), 'w')
-  outDUR = open('log/log-dur-{0}-{1}-{2}.txt'.format(wratio, rw, pid), 'w')
+  pid = os.getpid()
+  outTS = open('log/log-ts-{0}-{1}-{2}-{3}.txt'.format(wratio, rw, pid, clusterNum), 'w')
+  outDUR = open('log/log-dur-{0}-{1}-{2}-{3}.txt'.format(wratio, rw, pid, clusterNum), 'w')
   writeratio = wratio
   readratio = 100-wratio
   maxidx = wratio * op_repeat
@@ -41,7 +42,10 @@ def doLoop(client):
       if doesWrite:
         client.write(path, str(nodeId))
       else:
-        client.read(path)
+        try:
+            client.read(path)
+        except:
+            time.sleep(1) #read failed meaning writing is taking time
       endTime = datetime.datetime.now()
       deltaTime = endTime - startTime
 
