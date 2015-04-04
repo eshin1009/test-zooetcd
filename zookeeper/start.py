@@ -4,7 +4,7 @@ from zookeeper_read_client import readTest, cleanUp
 from zookeeper_write_client import writeTest
 import time
 
-sleeptime = 2 #in minutes
+sleeptime = 1 #in minutes
 leaders = {3: '172.31.3.130', 5: '172.31.16.222', 7: '172.31.23.49'} #ESTELLE: Change this?
 writeratios = [5, 20, 50]
 
