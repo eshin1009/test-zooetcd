@@ -39,12 +39,12 @@ def start_clean():
                         continue
                     try:
                         hr = int(a[0])
-                        min = int(a[1])
+                        minutes = int(a[1])
                         sec = int(a[2])
                         ms = int(a[3])
                     except:
                         continue
-                    mode = a[4]
+                    mode = str(a[4]).strip('\n')
                     if mode != 'read' and mode != 'write':
                         continue
                     output.write(line)
