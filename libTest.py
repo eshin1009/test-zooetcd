@@ -3,7 +3,7 @@ import datetime
 import socket
 import time
 
-op_repeat = 10
+#op_repeat = 10
 maxidx = 0
 
 
@@ -23,9 +23,9 @@ def initTest(rw, wratio, clusterNum):
   pid = os.getpid()
   outTS = open('log/log-ts-{0}-{1}-{2}-{3}.txt'.format(wratio, clusterNum, rw, pid), 'w')
   outDUR = open('log/log-dur-{0}-{1}-{2}-{3}.txt'.format(wratio, clusterNum, rw, pid), 'w')
-  writeratio = wratio
-  readratio = 100-wratio
-  maxidx = wratio * op_repeat
+  # writeratio = wratio
+  # readratio = 100-wratio
+  maxidx = 10 #wratio * op_repeat
 
 def getMaxIdx():
   return maxidx
@@ -33,16 +33,23 @@ def getMaxIdx():
 def childPath(i):
   return  rootpath + '/n' + '_' + str(i)
 
-def doLoop(client):
+def doLoop(client, etcd=False):
   while True:
     for nodeId in range(maxidx):
-      path = childPath(nodeId)
+      if etcd == False:
+        path = childPath(nodeId)
       #print "{0} {1}".format(mode, path)
       startTime = datetime.datetime.now()
       if doesWrite:
-        client.write(path, str(nodeId))
+        if etcd == True:
+          client.write('/n' + str(nodeId), str(nodeId))
+        else:
+          client.write(path, str(nodeId))
       else:
         try:
+          if etcd == True:
+            client.read('/n' + str(nodeId))
+          else:
             client.read(path)
         except:
             time.sleep(1) #read failed meaning writing is taking time
