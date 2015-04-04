@@ -58,8 +58,18 @@ def doLoop(client, etcd=False):
 
       # outTS.write('{0} {1} {2} {3} BEGIN {4}\n'.format(startTime.hour,
       outTS.write('{0} {1} {2} {3} {4}\n'.format(startTime.hour,
-        startTime.minute, startTime.second, startTime.microsecond / 1000, mode))
+                                                 startTime.minute, startTime.second, startTime.microsecond / 1000, mode))
       # outTS.write('{0} {1} {2} {3} END {4}\n'.format(endTime.hour,
       #   endTime.minute, endTime.second, endTime.microsecond / 1000, mode))
       outDUR.write('{0} {1} {2}\n'.format(mode, deltaTime.seconds, 
-        deltaTime.microseconds / 1000))
+                                          deltaTime.microseconds / 1000))
+      outTS.flush()
+      outDUR.flush()
+
+
+def endTest(client, etcd=False):
+  outTS.close()
+  outDUR.close()
+  if etcd == True:
+    for nodeId in range(maxidx):
+      client.delete('/n' + str(nodeId))
