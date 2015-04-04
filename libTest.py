@@ -33,26 +33,19 @@ def getMaxIdx():
 def childPath(i):
   return  rootpath + '/n' + '_' + str(i)
 
-def doLoop(client, etcd=False):
+def doLoop(client):
   while True:
     for nodeId in range(maxidx):
-      if etcd == False:
-        path = childPath(nodeId)
+      path = childPath(nodeId)
       #print "{0} {1}".format(mode, path)
       startTime = datetime.datetime.now()
       if doesWrite:
-        if etcd == True:
-          client.write('/n' + str(nodeId), str(nodeId))
-        else:
-          client.write(path, str(nodeId))
+        client.write(path, str(nodeId))
       else:
         try:
-          if etcd == True:
-            client.read('/n' + str(nodeId))
-          else:
-            client.read(path)
+          client.read(path)
         except:
-            time.sleep(1) #read failed meaning writing is taking time
+          time.sleep(1) #read failed meaning writing is taking time
       endTime = datetime.datetime.now()
       deltaTime = endTime - startTime
 
