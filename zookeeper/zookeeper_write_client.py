@@ -5,12 +5,13 @@ import datetime
 import zkclient
 from libZookeeperTest import init, createNodes, deleteNodes, childPath, ZookeeperClient
 from libTest import initTest, doLoop
+import random
 
 def writeTest(clusterNum, leaderIp, writeratio):
-    (servers, options) = init()
-    client = ZookeeperClient(leaderIp + ':2181', options.timeout) # on port 4001
-    # client = ZookeeperClient(servers[0] + ':2181', options.timeout) # on port 4001
-    # writeratio = int(client.read('/writeratio')[0])
+    random.seed()  # use system time by default
+    (servers, options) = init(clusterNum)
+    sid = random.randint(0, clusterNum-1)
+    client = ZookeeperClient(servers[sid] + ':2181', options.timeout) # on port 4001
 
     initTest('write', writeratio, clusterNum)
 
@@ -18,7 +19,3 @@ def writeTest(clusterNum, leaderIp, writeratio):
     createNodes(client)
 
     doLoop(client)
-    # delete notes
-
-    #deleteNodes(client)
-

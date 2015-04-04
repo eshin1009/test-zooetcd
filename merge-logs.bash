@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; then
   echo "usage: $0 <etcd|zookeeper> <cluster number> [write-ratio...] " 1>&2
 fi
 

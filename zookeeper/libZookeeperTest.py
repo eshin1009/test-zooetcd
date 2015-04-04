@@ -5,7 +5,7 @@ from libTest import childPath, rootpath, getMaxIdx
 
 import os
 
-def init():
+def init(clusterNum):
   servers_file = 'servers.txt'
   usage = "usage: %prog [options]"
   parser = OptionParser(usage=usage)
@@ -25,7 +25,7 @@ def init():
   zkclient.options = options
 
   zookeeper.set_log_stream(open("log-cli/cli_log_%d.txt" % (os.getpid()),"w"))
-  servers = readServers(servers_file)
+  servers = readServers('servers-{0}.txt'.format(clusterNum))
   return (servers, options)
 
 

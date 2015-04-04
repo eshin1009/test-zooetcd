@@ -5,24 +5,28 @@ import datetime
 import zkclient
 from libZookeeperTest import init, createNodes, deleteNodes, childPath, ZookeeperClient
 from libTest import initTest, doLoop
+import random
 
 def readTest(clusterNum, leaderIp, writeratio):
-    (servers, options) = init() #ESTELLE: servers being ignored
-    client = ZookeeperClient(leaderIp + ':2181', options.timeout) # servers not being used
-    #client = ZookeeperClient(servers[0] + ':2181', options.timeout) # on port 4001
-    #writeratio = int(client.read('/writeratio')[0])
+    random.seed()  # use system time by default
+    (servers, options) = init(clusterNum)
+    sid = random.randint(0, clusterNum-1)
+    client = ZookeeperClient(servers[sid] + ':2181', options.timeout) # on port 4001
 
     initTest('read', writeratio, clusterNum)
 
     # create nodes
-    createNodes(client)
+    # createNodes(client)
 
     doLoop(client)
 
-    #deleteNodes(client)
+def startUp(clusterNum):
+    (servers, options) = init(clusterNum)
+    client = ZookeeperClient(servers[0] + ':2181', options.timeout)
+    createNodes(client)    
 
 # delete notes
-def cleanUp(leaderIp): #ESTELLE: is it OK?
-    (servers, options) = init()
-    client = ZookeeperClient(leaderIp + ':2181', options.timeout) # on port 4001
+def cleanUp(clusterNum, leaderIp):
+    (servers, options) = init(clusterNum)
+    client = ZookeeperClient(servers[0] + ':2181', options.timeout) # on port 4001
     deleteNodes(client)

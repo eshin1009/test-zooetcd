@@ -1,6 +1,6 @@
 import sys
 import multiprocessing
-from zookeeper_read_client import readTest, cleanUp
+from zookeeper_read_client import readTest, cleanUp, startUp
 from zookeeper_write_client import writeTest
 import time
 
@@ -11,6 +11,7 @@ writeratios = [5, 20, 50]
 #normal ops test
 for cluster, ip in leaders.items():
     for x in writeratios:
+        startUp(cluster)
         #200 clients total
         write_clients = x*2
         read_clients = (100-x)*2
@@ -29,6 +30,6 @@ for cluster, ip in leaders.items():
         time.sleep(sleeptime*60)
         for p in ps:
             p.terminate()
-            print "runTest terminated\n"
+            print "runTest terminated"
             p.join()
-        cleanUp(ip) #delete nods
+#        cleanUp(cluster, ip) #delete nods

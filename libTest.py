@@ -3,9 +3,7 @@ import datetime
 import socket
 import time
 
-#op_repeat = 10
-maxidx = 0
-
+maxidx = 10
 
 outTS = ""
 outTS = ""
@@ -17,7 +15,7 @@ mode = ""
 doesWrite = False
 
 def initTest(rw, wratio, clusterNum):
-  global mode, doesWrite, outTS, outDUR, writeratio, readratio, maxidx
+  global mode, doesWrite, outTS, outDUR, writeratio, readratio
   mode = rw
   doesWrite = rw == 'write'
   pid = os.getpid()
@@ -25,7 +23,6 @@ def initTest(rw, wratio, clusterNum):
   outDUR = open('log/log-dur-{0}-{1}-{2}-{3}.txt'.format(wratio, clusterNum, rw, pid), 'w')
   # writeratio = wratio
   # readratio = 100-wratio
-  maxidx = 10 #wratio * op_repeat
 
 def getMaxIdx():
   return maxidx
