@@ -5,8 +5,8 @@ from etcd_write_client import writeTest
 import time
 
 sleeptime = 1 #in minutes
-#leaders = {3: '172.31.3.130', 5: '172.31.16.222', 7: '172.31.23.49'}
-leaders = {3: '172.31.3.130'}
+leaders = {3: '172.31.3.130', 5: '172.31.16.222', 7: '172.31.23.49'}
+#leaders = {3: '172.31.3.130'}
 writeratios = [5, 20, 50]
 
 #normal ops test

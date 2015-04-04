@@ -56,9 +56,10 @@ def doLoop(client, etcd=False):
       endTime = datetime.datetime.now()
       deltaTime = endTime - startTime
 
-      outTS.write('{0} {1} {2} {3} BEGIN {4}\n'.format(startTime.hour,
+      # outTS.write('{0} {1} {2} {3} BEGIN {4}\n'.format(startTime.hour,
+      outTS.write('{0} {1} {2} {3} {4}\n'.format(startTime.hour,
         startTime.minute, startTime.second, startTime.microsecond / 1000, mode))
-      outTS.write('{0} {1} {2} {3} END {4}\n'.format(endTime.hour,
-        endTime.minute, endTime.second, endTime.microsecond / 1000, mode))
+      # outTS.write('{0} {1} {2} {3} END {4}\n'.format(endTime.hour,
+      #   endTime.minute, endTime.second, endTime.microsecond / 1000, mode))
       outDUR.write('{0} {1} {2}\n'.format(mode, deltaTime.seconds, 
         deltaTime.microseconds / 1000))
